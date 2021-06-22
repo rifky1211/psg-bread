@@ -1,0 +1,176 @@
+<%- include('./partials/header') %>
+<h1>BREAD (Browse, Read, Edit, Add, Delete)</h1>
+<h1>Search Data</h1>
+
+<form class="form-horizontal" action="" method="get">
+  <input type="hidden" name="page" value="1">
+  
+  <div class="form-group">
+    <input type="checkbox" id="checkString" onclick="myFunction1()" name="checkString" <%= stringdata ? ' checked' : '' %> />
+    <label class="control-label col-sm-2" for="string">String :</label>
+    <div class="col-sm-4">
+      <input
+        type="string"
+        class="form-control"
+        id="string"
+        name="string"
+        placeholder="Enter String ..."
+        value="<%= stringdata %>" <%= stringdata ? '' : ' disabled' %>
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="checkbox" id="checkAngka" onclick="myFunction2()" <%= integerdata ? ' checked' : '' %> >
+    <label class="control-label col-sm-2" for="integer">Integer :</label>
+    <div class="col-sm-4">
+      <input
+        type="number"
+        class="form-control"
+        id="integer"
+        name="integer"
+        placeholder="Enter Integer..."
+        value="<%= integerdata %>" <%= integerdata ? '' : ' disabled' %>
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="checkbox" id="checkDesimal" onclick="myFunction3()" <%= floatdata ? ' checked' : '' %> >
+    <label class="control-label col-sm-2" for="float">Float :</label>
+    <div class="col-sm-4">
+      <input
+        type="number"
+        class="form-control"
+        id="float"
+        name="float"
+        placeholder="Enter Float..."
+        value="<%= floatdata %>" <%= floatdata ? '' : ' disabled' %>
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="checkbox" id="checkDate" onclick="myFunction4()" <%= start ? 'checked' : '' %> >
+    <label class="control-label col-sm-2">Date :</label>
+    <div class="col-sm-2">
+      <input
+        type="date"
+        class="form-control"
+        id="start"
+        name="start"
+        value="<%= start %>" <%= start ? '' : ' disabled' %>
+      /> to
+      <input
+        type="date"
+        class="form-control"
+        id="end"
+        name="end"
+        value="<%= end %>" <%= end ? '' : ' disabled' %>
+      />
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="checkbox" id="checkBoolean" onclick="myFunction5()" <%= booleandata ? 'checked' : '' %> >
+    <label for="boolean" class="control-label col-sm-2">Boolean :</label>
+    <div class="col-sm-2">
+      <select name="boolean" id="boolean" class="form-select col-sm-2" <%= booleandata ? '' : ' disabled' %>>
+        <option value="">Choose your boolean ...</option>
+        <option value="true" <%= booleandata == 'true' ? ' selected' : '' %>>True</option>
+        <option value="false" <%= booleandata == 'false' ? ' selected' : '' %>>False</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary btn-search">Submit</button>
+      <a href="/" class="btn btn-warning btn-reset">Reset</a>
+    </div>
+  </div>
+</form>
+
+<h1>Data</h1>
+
+<table class="table table-striped">
+  <tr>
+    <th>Id</th>
+    <th>String</th>
+    <th>Integer</th>
+    <th>Float</th>
+    <th>Date</th>
+    <th>Boolean</th>
+    <th>Action</th>
+  </tr>
+  <% data.forEach(item => {  %> 
+  <tr>
+    <td><%= item.id %></td>
+    <td><%= item.stringdata %></td>
+    <td><%= item.integerdata %></td>
+    <td><%= item.floatdata %></td>
+    <td><%= moment(item.datedata).format("D MMMM YYYY")%></td>
+    <td><%= item.booleandata %></td>
+    <td>
+      <a href="/edit/<%= item.id %>" class="btn btn-success">Edit</a>
+      <a href="/delete/<%= item.id %>" class="btn btn-danger">Delete</a>
+    </td>
+  </tr>
+  <% }) %> 
+</table>
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item <%= page > 1 ? '' : 'disabled' %> ">
+      <a class="page-link" href="<%= url.replace(`page=${page}`, `page=${page - 1}`)%>">Previous</a>
+    </li>
+    <% for(let i = 1; i <= jumlahHalaman; i++){ %> 
+    <li class="page-item <%= page == i ? 'active' : '' %> "><a class="page-link" href="<%= url.replace(`page=${page}`, `page=${i}`) %>"><%= i %> </a></li>
+    <% } %> 
+    <li class="page-item <%= page < jumlahHalaman ? '' : 'disabled' %> ">
+      <a class="page-link" href="<%= url.replace(`page=${page}`, `page=${page + 1}`)%>">Next</a>
+    </li>
+  </ul>
+</nav>
+<div>
+  <a href="/add" class="btn btn-primary">Add</a>
+</div>
+<script>
+  function myFunction1() {
+    const check = document.getElementById("checkString");
+    if (check.checked == true) {
+      document.getElementById("string").disabled = false;
+    } else {
+      document.getElementById("string").disabled = true;
+    }
+  }
+  function myFunction2() {
+    const check = document.getElementById("checkAngka");
+    if (check.checked == true) {
+      document.getElementById("integer").disabled = false;
+    } else {
+      document.getElementById("integer").disabled = true;
+    }
+  }
+  function myFunction3() {
+    const check = document.getElementById("checkDesimal");
+    if (check.checked == true) {
+      document.getElementById("float").disabled = false;
+    } else {
+      document.getElementById("float").disabled = true;
+    }
+  }
+  function myFunction4() {
+    const check = document.getElementById("checkDate");
+    if (check.checked == true) {
+      document.getElementById("start").disabled = false;
+      document.getElementById("end").disabled = false;
+    } else {
+      document.getElementById("start").disabled = true;
+      document.getElementById("end").disabled = true;
+    }
+  }
+  function myFunction5() {
+    const check = document.getElementById("checkBoolean");
+    if (check.checked == true) {
+      document.getElementById("boolean").disabled = false;
+    } else {
+      document.getElementById("boolean").disabled = true;
+    }
+  }
+</script>
+<%- include('./partials/footer') %>
